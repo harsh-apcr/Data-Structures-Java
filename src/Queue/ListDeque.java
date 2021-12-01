@@ -1,6 +1,6 @@
 package Queue;
 
-public class ListDeque<E> implements MyDeque<E> {
+public class ListDeque<E> implements MyDeque<E> , MyQueue<E> {
     private final DList<E> Q;
 
     public ListDeque() {

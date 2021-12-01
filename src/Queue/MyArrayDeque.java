@@ -1,6 +1,6 @@
 package Queue;
 
-public class MyArrayDeque<E> implements MyDeque<E> {
+public class MyArrayDeque<E> implements MyDeque<E> , MyQueue<E> {
     private static final int CAP = 1024;
     private final E[] Q;
     private final int cap;
@@ -26,9 +26,10 @@ public class MyArrayDeque<E> implements MyDeque<E> {
         if (this.size() == this.cap-1) throw new QueueFullException();
         else {
             // size < cap-1
-            Q[r] = e;
-            r = (r+1)%cap;
+            Q[f] = e;
+            f = (cap+f-1)%cap;
         }
+
     }
 
     @Override
@@ -36,8 +37,8 @@ public class MyArrayDeque<E> implements MyDeque<E> {
         if (this.size() == this.cap-1) throw new QueueFullException();
         else {
             // size < cap-1
-            Q[f] = e;
-            f = (cap+f-1)%cap;
+            Q[r] = e;
+            r = (r+1)%cap;
         }
     }
 
