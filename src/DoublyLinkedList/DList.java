@@ -1,4 +1,4 @@
-package Queue;
+package DoublyLinkedList;
 
 public class DList<T> {
     // DList is 0-based

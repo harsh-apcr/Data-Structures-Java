@@ -1,5 +1,8 @@
 package Queue;
 
+import DoublyLinkedList.DList;
+import DoublyLinkedList.EmptyListException;
+
 public class ListDeque<E> implements MyDeque<E> , MyQueue<E> {
     private final DList<E> Q;
 
@@ -21,7 +24,7 @@ public class ListDeque<E> implements MyDeque<E> , MyQueue<E> {
     public E removeFirst() throws QueueEmptyException {
         try {
             return this.Q.deleteAtFirst();
-        } catch (Queue.EmptyListException e) {
+        } catch (EmptyListException e) {
             throw new QueueEmptyException();
         }
     }
@@ -30,7 +33,7 @@ public class ListDeque<E> implements MyDeque<E> , MyQueue<E> {
     public E removeLast() throws QueueEmptyException {
         try {
         return this.Q.deleteAtLast();
-        } catch (Queue.EmptyListException e) {
+        } catch (EmptyListException e) {
             throw new QueueEmptyException();
         }
     }
@@ -39,7 +42,7 @@ public class ListDeque<E> implements MyDeque<E> , MyQueue<E> {
     public E first() throws QueueEmptyException {
         try {
             return this.Q.first();
-        } catch (Queue.EmptyListException e) {
+        } catch (EmptyListException e) {
             throw new QueueEmptyException();
         }
     }
@@ -48,7 +51,7 @@ public class ListDeque<E> implements MyDeque<E> , MyQueue<E> {
     public E last() throws QueueEmptyException {
         try {
             return this.Q.last();
-        } catch (Queue.EmptyListException e) {
+        } catch (EmptyListException e) {
             throw new QueueEmptyException();
         }
     }

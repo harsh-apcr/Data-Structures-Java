@@ -1,4 +1,4 @@
-package Queue;
+package DoublyLinkedList;
 
 public class DListNode<T> {
 
