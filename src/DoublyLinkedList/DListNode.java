@@ -17,7 +17,7 @@ public class DListNode<T> {
     }
 
     /**
-     * value field must have its own toString() method
+     * T value field must have its own toString() method
      * @return
      */
     @Override
