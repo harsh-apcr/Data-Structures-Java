@@ -15,4 +15,13 @@ public class DListNode<T> {
         this.value = value;
         this.next = null;this.prev = null;
     }
+
+    /**
+     * value field must have its own toString() method
+     * @return
+     */
+    @Override
+    public String toString() {
+        return "{ value : " + value + " }";
+    }
 }

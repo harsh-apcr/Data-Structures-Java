@@ -118,4 +118,21 @@ public class DList<T> {
         else return this.trailer.prev.value;
     }
 
+    @Override
+    public String toString() {
+        DListNode<T> currNode = header.next;
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        while(true) {
+            sb.append(currNode.toString());
+            currNode = currNode.next;
+            if (currNode != trailer) {
+                sb.append(',');
+            }
+            else break;
+        }
+        sb.append(']');
+        return String.valueOf(sb);
+    }
+
 }
