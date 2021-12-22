@@ -129,15 +129,14 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
             }
             if (parNode != root) return parNode.getValue(); // parNode.getLeft() == currNode
             else return null;
-
         }
     }
 
-    public void delete(T value) throws TreeEmptyException {
+    public void delete(T value) throws TreeEmptyException , ValueNotFoundException {
         if(this.root.getRight() ==null) throw new TreeEmptyException();
         else {
             BinaryTreeNode<T> currNode = this.root.getRight();
-            while(currNode!=null && !currNode.getValue().equals(value)) {
+            while(currNode!=null) {
                 if (comparator.compare(value, currNode.getValue()) > 0) {
                     currNode = currNode.getRight();
                 } else if (comparator.compare(value, currNode.getValue()) < 0) {
@@ -149,9 +148,64 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
                     // case 2 - parent of a single child
                     // case 3 - has 2 children
                     // complete the block
-                    
+                    boolean isRightChild = currNode.getParent().getRight() == currNode;
+                    // leaf node (prune it)
+                    if (currNode.getRight() == null && currNode.getLeft() == null) {
+                        if (isRightChild) currNode.getParent().setRight(null);
+                        else currNode.getParent().setLeft(null);
+                    }
+                    else {
+                        // not a leaf node
+                        // parent of a single child
+                        if (currNode.getRight()!=null && currNode.getLeft() == null) {
+                            currNode.getRight()
+                                    .setParent(currNode.getParent());
+                            if(isRightChild) currNode.getParent().setRight(currNode.getRight());
+                            else currNode.getParent().setLeft(currNode.getRight());
+                        }
+                        // (node.right == null || node.left != null) && (node.right != null || node.left != null)
+                        // (A+B')(A'+B') = B'+ AA'= B'
+                        // node.left != null
+                        else if(currNode.getRight() == null) {
+                            currNode.getLeft()
+                                    .setParent(currNode.getParent());
+                            if(isRightChild) currNode.getParent().setRight(currNode.getLeft());
+                            else currNode.getParent().setLeft(currNode.getLeft());
+                        }
+                        // node.left!=null and node.right != null
+                        //has two children
+                        // deleting successor
+                        else {
+                            BinaryTreeNode<T> newNode = currNode.getRight();
+                            while(true) {
+                                if(newNode.getLeft()!=null) {
+                                    newNode = newNode.getLeft();
+                                }
+                                else {
+                                    // newNode.left == null
+                                    if (newNode.getRight()!=null) {
+                                        newNode.getRight()
+                                                .setParent(newNode.getParent());
+                                        if (newNode.getParent().getRight() == newNode)
+                                            newNode.getParent().setRight(newNode.getRight());
+                                        else newNode.getParent().setLeft(newNode.getRight());
+                                    }
+                                    else {
+                                        if (newNode.getParent().getRight() == newNode)
+                                            newNode.getParent().setRight(null);
+                                        else newNode.getParent().setLeft(null);
+                                    }
+                                    break;
+                                }
+                            }
+                            currNode.setValue(newNode.getValue());
+                        }
+                    }
+                    return;
                 }
             }
+            // currNode==null
+            throw new ValueNotFoundException();
         }
     }
 
