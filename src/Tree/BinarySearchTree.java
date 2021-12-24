@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Comparator;
 
 public class BinarySearchTree<T> extends BinaryTree<T> {
-    private final Comparator<T> comparator;
+    protected final Comparator<T> comparator;
 
     public BinarySearchTree(Comparator<T> comparator) {
         this.comparator = comparator;

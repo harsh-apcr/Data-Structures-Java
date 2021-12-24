@@ -2,6 +2,7 @@ package Tree;
 
 public class BinaryTreeNode<T> {
     private BinaryTreeNode<T> parent,left,right;
+    private boolean isBlack;    // for RBTree implementation
     private T value;
 
     BinaryTreeNode(T value) {
@@ -9,35 +10,54 @@ public class BinaryTreeNode<T> {
         parent = null;
         left = null;
         right = null;
+        isBlack = true;
     }
 
-    public BinaryTreeNode<T> getParent() {
+    BinaryTreeNode(T value,boolean blackColor) {
+        this.value = value;
+        parent = null;
+        left = null;
+        right = null;
+        isBlack = blackColor;
+    }
+
+    BinaryTreeNode<T> getParent() {
         return parent;
     }
 
-    public BinaryTreeNode<T> getLeft() {
+    BinaryTreeNode<T> getLeft() {
         return left;
     }
 
-    public BinaryTreeNode<T> getRight() {
+    BinaryTreeNode<T> getRight() {
         return right;
     }
 
-    public T getValue() {
+    T getValue() {
         return value;
     }
 
-    public void setValue(T value) { this.value = value; }
+    void setValue(T value) { this.value = value; }
 
-    public void setParent(BinaryTreeNode<T> parent) {
+    void setParent(BinaryTreeNode<T> parent) {
         this.parent = parent;
     }
 
-    public void setLeft(BinaryTreeNode<T> left) {
+    void setLeft(BinaryTreeNode<T> left) {
         this.left = left;
     }
 
-    public void setRight(BinaryTreeNode<T> right) {
+    void setRight(BinaryTreeNode<T> right) {
         this.right = right;
     }
+
+    boolean isBlack() { return this.isBlack; }
+
+    /**
+     * Sets color of node black if setBlack is true
+     * @param setBlack
+     */
+    void setColorBlack(boolean setBlack) { this.isBlack = setBlack;}
+
+
 }
