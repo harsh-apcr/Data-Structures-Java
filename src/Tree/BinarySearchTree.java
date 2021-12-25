@@ -1,5 +1,6 @@
 package Tree;
 
+import DoublyLinkedList.DList;
 import com.sun.source.tree.Tree;
 import org.jetbrains.annotations.NotNull;
 
@@ -209,6 +210,10 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         }
     }
 
+    // key-invariant property
+    public static <E> boolean BSTreeSanityCheck(@NotNull BinarySearchTree<E> bST) {
+        return bST.inOrder().isIncreasing(bST.comparator);
+    }
 
 
 
