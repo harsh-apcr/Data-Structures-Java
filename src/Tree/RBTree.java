@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
 
+
 public class RBTree<T> extends BinarySearchTree<T>{
 
     public RBTree(Comparator<T> comparator) {
@@ -172,6 +173,157 @@ public class RBTree<T> extends BinarySearchTree<T>{
         }
     }
 
+    private static <T> void delete(BinaryTreeNode<T> currNode) {
+
+    }
+
+    public void delete(T value) throws TreeEmptyException,ValueNotFoundException {
+        if (this.root.getRight() == null) throw new TreeEmptyException();
+        else {
+            BinaryTreeNode<T> currNode = this.root.getRight();
+            while (currNode != null) {
+                if (comparator.compare(value, currNode.getValue()) > 0) {
+                    currNode = currNode.getRight();
+                } else if (comparator.compare(value, currNode.getValue()) < 0) {
+                    currNode = currNode.getLeft();
+                } else {
+                    // found the node to be deleted
+                    boolean isRight = currNode.getParent().getRight() == currNode;
+                    if(currNode.getLeft()==null || currNode.getRight() == null) {
+                        // currNode has at most one child
+                        // if not a leaf node then it must be black parent of a red node
+                        if (currNode.getLeft()!=null) {
+                            currNode.getLeft().setColorBlack(true);
+                            currNode.getLeft().setParent(currNode.getParent());
+                            if(isRight) currNode.getParent().setRight(currNode.getLeft());
+                            else currNode.getParent().setLeft(currNode.getLeft());
+                        }
+                        else if (currNode.getRight()!=null) {
+                            currNode.getRight().setColorBlack(true);
+                            currNode.getRight().setParent(currNode.getParent());
+                            if(isRight) currNode.getParent().setRight(currNode.getRight());
+                            else currNode.getParent().setLeft(currNode.getRight());
+                        }
+                        else {
+                            // currNode is a leaf
+                            if(!currNode.isBlack()) {
+                                if(isRight) currNode.getParent().setRight(null);
+                                else currNode.getParent().setLeft(null);
+                            }
+                            else {
+
+                            }
+                        }
+                    }
+                    else {
+                        // parent of two children
+                        // deletion of a black leaf
+                        BinaryTreeNode<T> parNode;
+                        do {
+                            parNode = currNode.getParent();
+                            if (isRight) {
+                                BinaryTreeNode<T> sibling = parNode.getLeft();
+                                if (sibling.isBlack()) {
+                                    // case 1 - sibling is black and has a red child
+                                    // any child of sibling cannot be null
+                                    // case 1.1 - forming a straight line
+                                    if (!sibling.getLeft().isBlack()) {
+                                        rightRotate(sibling, parNode);
+                                        sibling.setColorBlack(parNode.isBlack());
+                                        currNode.setColorBlack(true);
+                                        parNode.setColorBlack(true);
+                                        sibling.getLeft().setColorBlack(true);
+                                        break;
+                                    }
+                                    // case 1.2 - not forming a straight line
+                                    else if (!sibling.getRight().isBlack()) {
+                                        BinaryTreeNode<T> cousin = sibling.getRight();
+                                        sibling.setColorBlack(false);
+                                        cousin.setColorBlack(true);
+                                        leftRotate(sibling, sibling.getRight());
+                                        rightRotate(cousin, parNode);
+                                        cousin.setColorBlack(parNode.isBlack());
+                                        currNode.setColorBlack(true);
+                                        parNode.setColorBlack(true);
+                                        sibling.setColorBlack(true);
+                                        break;
+                                    }
+                                    else {
+                                        // case 2 - sibling is black and both children are black
+                                        currNode.setColorBlack(true);
+                                        sibling.setColorBlack(false);
+                                        parNode.setColorBlack(true);
+                                        if (!parNode.isBlack()) break;
+                                        else currNode = parNode; // continue resolving for currNode
+                                    }
+                                } else {
+                                    // sibling is red
+                                    // parNode is black
+                                    sibling.setColorBlack(true);
+                                    parNode.setColorBlack(false);
+                                    rightRotate(sibling, parNode);
+                                    // repeat resolving for currNode
+                                }
+                            } else {
+                                BinaryTreeNode<T> sibling = parNode.getRight();
+                                if(sibling.isBlack()) {
+                                    // case 1.1 - forming a straight line
+                                    if (!sibling.getRight().isBlack()) {
+                                        leftRotate(parNode, sibling);
+                                        sibling.setColorBlack(parNode.isBlack());
+                                        currNode.setColorBlack(true);
+                                        parNode.setColorBlack(true);
+                                        sibling.getRight().setColorBlack(true);
+                                        break;
+                                    }
+                                    // case 1.2 - not forming a straight line
+                                    else if (!sibling.getLeft().isBlack()) {
+                                        BinaryTreeNode<T> cousin = sibling.getLeft();
+                                        sibling.setColorBlack(false);
+                                        cousin.setColorBlack(true);
+                                        rightRotate(sibling, sibling.getRight());
+                                        leftRotate(cousin, parNode);
+                                        cousin.setColorBlack(parNode.isBlack());
+                                        currNode.setColorBlack(true);
+                                        parNode.setColorBlack(true);
+                                        sibling.setColorBlack(true);
+                                        break;
+                                    } else {
+                                        // case 2 - sibling is black and both children are black
+                                        currNode.setColorBlack(true);
+                                        sibling.setColorBlack(false);
+                                        parNode.setColorBlack(true);
+                                        if (!parNode.isBlack()) break;
+                                        else currNode = parNode; // continue resolving for currNode
+                                    }
+                                }
+                                else {
+                                    // sibling is red
+                                    // parNode is black
+                                    sibling.setColorBlack(true);
+                                    parNode.setColorBlack(false);
+                                    leftRotate(parNode,sibling);
+                                    // repeat resolving for currNode
+                                }
+                            }
+                        } while(currNode.getParent() != root);
+                    }
+                    break;
+                }
+
+            }
+
+        }
+
+    }
+
+}
+
+
+
+
+    
+
 //    public static <E> void testColor(@NotNull RBTree<E> tree) {
 //        testColor(tree.root.getRight());
 //    }
@@ -181,4 +333,4 @@ public class RBTree<T> extends BinarySearchTree<T>{
 //        if (node.getRight()!=null) testColor(node.getRight());
 //
 //    }
-}
+
