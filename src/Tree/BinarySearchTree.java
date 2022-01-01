@@ -133,6 +133,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         }
     }
 
+
     public void delete(T value) throws TreeEmptyException , ValueNotFoundException {
         if(this.root.getRight() ==null) throw new TreeEmptyException();
         else {
