@@ -208,15 +208,20 @@ public class RBTree<T> extends BinarySearchTree<T>{
         boolean isRight = parNode.getRight() == currNode;
         if(parNode.getParent() == null) parNode.setRight(null);
         else {
+            currNode = null;
+            if(isRight) parNode.setRight(null);
+            else parNode.setLeft(null);
+
+            BinaryTreeNode<T> sibling;
             do {
                 if (isRight) {
-                    BinaryTreeNode<T> sibling = parNode.getLeft();
+                    sibling = parNode.getLeft();
+                    // sibling cannot be null (black height property)
                     if (sibling.isBlack()) {
                         // case 1 - sibling is black and has a red child
                         // case 1.1 - forming a straight line
                         if (sibling.getLeft()!= null && !sibling.getLeft().isBlack()) {
                             sibling.setColorBlack(parNode.isBlack());
-                            currNode.setColorBlack(true);
                             parNode.setColorBlack(true);
                             sibling.getLeft().setColorBlack(true);
                             rightRotate(sibling, parNode);
@@ -229,7 +234,6 @@ public class RBTree<T> extends BinarySearchTree<T>{
                             siblingChild.setColorBlack(true);
                             leftRotate(sibling, siblingChild);
                             siblingChild.setColorBlack(parNode.isBlack());
-                            currNode.setColorBlack(true);
                             parNode.setColorBlack(true);
                             sibling.setColorBlack(true);
                             rightRotate(siblingChild, parNode);
@@ -237,14 +241,13 @@ public class RBTree<T> extends BinarySearchTree<T>{
                         } else {
                             // (sibling.left == null || sibling.left = black)&&(sibling.right == null || sibling.right = black)
                             // case 2 - sibling is black and both children are black
-                            currNode.setColorBlack(true);
                             sibling.setColorBlack(false);
                             if (!parNode.isBlack()) {
                                 parNode.setColorBlack(true);
                                 break;
                             }
                             else {
-                                currNode = parNode; // continue resolving for currNode
+                                currNode = parNode; // continue resolving for currNode , currNode is black still
                                 parNode = currNode.getParent();
                                 isRight = parNode.getRight() == currNode;
                             }
@@ -258,12 +261,11 @@ public class RBTree<T> extends BinarySearchTree<T>{
                         // repeat resolving for currNode
                     }
                 } else {
-                    BinaryTreeNode<T> sibling = parNode.getRight();
+                    sibling = parNode.getRight();
                     if (sibling.isBlack()) {
                         // case 1.1 - forming a straight line
                         if (sibling.getRight()!=null && !sibling.getRight().isBlack()) {
                             sibling.setColorBlack(parNode.isBlack());
-                            currNode.setColorBlack(true);
                             parNode.setColorBlack(true);
                             sibling.getRight().setColorBlack(true);
                             leftRotate(parNode, sibling);
@@ -276,7 +278,6 @@ public class RBTree<T> extends BinarySearchTree<T>{
                             siblingChild.setColorBlack(true);
                             rightRotate(siblingChild,sibling);
                             siblingChild.setColorBlack(parNode.isBlack());
-                            currNode.setColorBlack(true);
                             parNode.setColorBlack(true);
                             sibling.setColorBlack(true);
                             leftRotate(parNode,siblingChild);
@@ -284,14 +285,13 @@ public class RBTree<T> extends BinarySearchTree<T>{
                         } else {
                             // (sibling.left == null || sibling.left = black)&&(sibling.right == null || sibling.right = black)
                             // case 2 - sibling is black and both children are black
-                            currNode.setColorBlack(true);
                             sibling.setColorBlack(false);
                             if (!parNode.isBlack()) {
                                 parNode.setColorBlack(true);
                                 break;
                             }
                             else {
-                                currNode = parNode; // continue resolving for currNode
+                                currNode = parNode; // continue resolving for currNode , currNode is already black
                                 parNode = currNode.getParent();
                                 isRight = parNode.getRight() == currNode;
                             }
@@ -333,6 +333,7 @@ public class RBTree<T> extends BinarySearchTree<T>{
                                 // reached the successor
                                 // newNode has at-most one child
                                 deleteNodeAtMostOneChild(newNode);
+                                currNode.setValue(newNode.getValue());
                                 break;
                             }
                         }
@@ -345,7 +346,15 @@ public class RBTree<T> extends BinarySearchTree<T>{
     }
 
 
+    public static <E> void testColor(@NotNull RBTree<E> tree) {
+        testColor(tree.root.getRight());
+    }
+    private static <E> void testColor(@NotNull BinaryTreeNode<E> node) {
+        if (node.getLeft()!=null) testColor(node.getLeft());
+        System.out.print(node.isBlack() ? "black " : "red ");
+        if (node.getRight()!=null) testColor(node.getRight());
 
+    }
 
 
 
@@ -356,13 +365,5 @@ public class RBTree<T> extends BinarySearchTree<T>{
 
     
 
-//    public static <E> void testColor(@NotNull RBTree<E> tree) {
-//        testColor(tree.root.getRight());
-//    }
-//    private static <E> void testColor(@NotNull BinaryTreeNode<E> node) {
-//        if (node.getLeft()!=null) testColor(node.getLeft());
-//        System.out.print(node.isBlack() ? "black " : "red ");
-//        if (node.getRight()!=null) testColor(node.getRight());
-//
-//    }
+
 
