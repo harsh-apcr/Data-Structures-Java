@@ -5,16 +5,19 @@ public class ArrayStack<E> implements MyStack<E> {
     private E[] S;
     private int top;
 
+    @SuppressWarnings("unchecked")
     public ArrayStack() {
         S = (E[]) new Object[CAP];
         top = -1;
     }
 
+    @SuppressWarnings("unchecked")
     public ArrayStack(int cap) {
         S = (E[])new Object[cap];
         top = -1;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void push(E e) {
         if (top < S.length-1) {
@@ -30,6 +33,7 @@ public class ArrayStack<E> implements MyStack<E> {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public E pop() throws StackEmptyException {
         if (top < 0) throw new StackEmptyException();
