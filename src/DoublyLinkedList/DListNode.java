@@ -1,4 +1,4 @@
-package Queue;
+package DoublyLinkedList;
 
 public class DListNode<T> {
 
@@ -14,5 +14,14 @@ public class DListNode<T> {
     public DListNode(T value) {
         this.value = value;
         this.next = null;this.prev = null;
+    }
+
+    /**
+     * T value field must have its own toString() method
+     * @return
+     */
+    @Override
+    public String toString() {
+        return "{ value : " + value + " }";
     }
 }

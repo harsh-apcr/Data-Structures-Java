@@ -1,16 +1,19 @@
-package Queue;
+package DoublyLinkedList;
+
+import java.util.Comparator;
 
 public class DList<T> {
     // DList is 0-based
     private final DListNode<T> header; // head sentinel
     private final DListNode<T> trailer; // tail sentinel
+    private int size;
 
     public DList() {
         this.header = new DListNode<>();
         this.trailer = new DListNode<>();
         this.header.next = this.trailer;
         this.trailer.prev = this.header;
-
+        this.size = 0;
     }
 
     public void insertAtFirst(T value) {
@@ -19,6 +22,7 @@ public class DList<T> {
         this.header.next.prev = node;
         this.header.next = node;
         node.prev = this.header;
+        size++;
     }
 
     public void insertAtLast(T value) {
@@ -27,6 +31,7 @@ public class DList<T> {
         node.prev = this.trailer.prev;
         this.trailer.prev.next = node;
         this.trailer.prev = node;
+        size++;
     }
 
     public void insertAt(T value, int index) throws IndexOutOfBoundsException {
@@ -46,6 +51,7 @@ public class DList<T> {
                 node.prev = currentNode.prev;
                 currentNode.prev = node;
                 node.next = currentNode;
+                size++;
             }
         }
     }
@@ -55,13 +61,14 @@ public class DList<T> {
     }
 
     public int size() {
-        int i = 0;
-        DListNode<T> currentNode = this.header.next;
-        while (currentNode != trailer) {
-            currentNode = currentNode.next;
-            i++;
-        }
-        return i;
+        return size;
+//        int i = 0;
+//        DListNode<T> currentNode = this.header.next;
+//        while (currentNode != trailer) {
+//            currentNode = currentNode.next;
+//            i++;
+//        }
+//        return i;
     }
 
     public T deleteAtFirst() throws EmptyListException {
@@ -72,6 +79,7 @@ public class DList<T> {
             currentNode.next.prev = currentNode.prev;
             currentNode.next = null;
             currentNode.prev = null;
+            size--;
             return currentNode.value;
         }
     }
@@ -84,6 +92,7 @@ public class DList<T> {
             currentNode.next.prev = currentNode.prev;
             currentNode.next = null;
             currentNode.prev = null;
+            size--;
             return currentNode.value;
         }
     }
@@ -104,6 +113,7 @@ public class DList<T> {
                 currentNode.next.prev = currentNode.prev;
                 currentNode.next = null;
                 currentNode.prev = null;
+                size--;
             }
         }
     }
@@ -118,4 +128,34 @@ public class DList<T> {
         else return this.trailer.prev.value;
     }
 
+    @Override
+    public String toString() {
+        DListNode<T> currNode = header.next;
+        StringBuilder sb = new StringBuilder();
+        sb.append('[');
+        while(true) {
+            sb.append(currNode.toString());
+            currNode = currNode.next;
+            if (currNode != trailer) {
+                sb.append(',');
+            }
+            else break;
+        }
+        sb.append(']');
+        return String.valueOf(sb);
+    }
+
+    public boolean isIncreasing(Comparator<T> comparator) {
+        DListNode<T> node = header.next;
+        if (this.size() == 0 || this.size() == 1) return true;    // vacuously true
+        while(node.next!=trailer) {
+            if (comparator.compare(node.value,node.next.value) > 0) return false;
+            node = node.next;
+        }
+        return true;
+    }
+
+    public boolean isDecreasing(Comparator<T> comparator) {
+        return this.isIncreasing(comparator.reversed());
+    }
 }

@@ -1,4 +1,4 @@
-package Queue;
+package DoublyLinkedList;
 
 public class EmptyListException extends Exception {
     public EmptyListException() {
