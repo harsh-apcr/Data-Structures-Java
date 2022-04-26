@@ -1,7 +1,5 @@
 package Tree;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Comparator;
 
 
@@ -11,7 +9,13 @@ public class RBTree<T> extends BinarySearchTree<T>{
         super(comparator);
     }
 
-    private static <E> void rightRotate(@NotNull BinaryTreeNode<E> x,@NotNull BinaryTreeNode<E> y) {
+    /**
+     * does right rotation of Binary Tree w.r.t nodes x and y
+     * @param x : BinaryTreeNode<E>
+     * @param y : BinaryTreeNode<E>
+     * @param <E> : generic class
+     */
+    private static <E> void rightRotate(BinaryTreeNode<E> x,BinaryTreeNode<E> y) {
         // y.parent != null (Restriction)
         if (y.getParent().getLeft() == y) y.getParent().setLeft(x);
         else y.getParent().setRight(x);
@@ -22,7 +26,13 @@ public class RBTree<T> extends BinarySearchTree<T>{
         x.setRight(y);
     }
 
-    private static <E> void leftRotate(@NotNull BinaryTreeNode<E> x,@NotNull BinaryTreeNode<E> y) {
+    /**
+     * does left rotation of Binary Tree w.r.t nodes x and y
+     * @param x : BinaryTreeNode<E>
+     * @param y : BinaryTreeNode<E>
+     * @param <E> : generic class
+     */
+    private static <E> void leftRotate(BinaryTreeNode<E> x,BinaryTreeNode<E> y) {
         // x.parent != null (Restriction)
         if (x.getParent().getLeft() == x) x.getParent().setLeft(y);
         else x.getParent().setRight(y);
@@ -33,9 +43,14 @@ public class RBTree<T> extends BinarySearchTree<T>{
         y.setLeft(x);
     }
 
-    public static <E> boolean RBtreeSanityCheck(@NotNull RBTree<E> tree) {
+    /**
+     * sanity check for RBTree (Checking for BST invariant, color invariant and black height invariant)
+     * @param tree : RBTree<E>
+     * @param <E> : generic class
+     */
+    public static <E> boolean RBtreeSanityCheck(RBTree<E> tree) {
         BinaryTreeNode<E> node = tree.root.getRight();
-        if (node == null) return true; // vacuously true
+        if (node == null) return true; // vacuously true (empty tree)
         if (!node.isBlack()) return false;
         else
             return BinarySearchTree.BSTreeSanityCheck(tree)
@@ -43,6 +58,11 @@ public class RBTree<T> extends BinarySearchTree<T>{
                 && blackHeight(node) != -1;
     }
 
+    /**
+     * checks for black height invariant of RBTree rooted at node
+     * @param node : BinaryTreeNode<E>
+     * @param <E> : generic class
+     */
     private static <E> int blackHeight(BinaryTreeNode<E> node) {
         if (node == null) return 0;
         else {
@@ -62,6 +82,11 @@ public class RBTree<T> extends BinarySearchTree<T>{
         }
     }
 
+    /**
+     * checks for color invariant of RBTree rooted at node
+     * @param node : BinaryTreeNode<E>
+     * @param <E> : generic class
+     */
     private static <E> boolean colorCheck(BinaryTreeNode<E> node) {
         if (node == null) return true;
         else {
@@ -84,6 +109,10 @@ public class RBTree<T> extends BinarySearchTree<T>{
         }
     }
 
+    /**
+     * insertion into a RBTree
+     * @param value @NotNull, value to insert into BST
+     */
     @Override
     public void insert(T value) {
         if(this.root.getRight() ==null) {
@@ -174,7 +203,7 @@ public class RBTree<T> extends BinarySearchTree<T>{
     }
 
     // currNode.left == null || currNode.right == null
-    private static <T> void deleteNodeAtMostOneChild(@NotNull BinaryTreeNode<T> currNode) {
+    private static <T> void deleteNodeAtMostOneChild(BinaryTreeNode<T> currNode) {
         // currNode.parent != null
         boolean isRight = currNode.getParent().getRight() == currNode;
         // currNode has at most one child
@@ -202,7 +231,7 @@ public class RBTree<T> extends BinarySearchTree<T>{
         }
     }
 
-    private static <T> void deleteBlackLeaf(@NotNull BinaryTreeNode<T> currNode) {
+    private static <T> void deleteBlackLeaf(BinaryTreeNode<T> currNode) {
         // deletion of a black leaf
         BinaryTreeNode<T> parNode = currNode.getParent();
         boolean isRight = parNode.getRight() == currNode;
@@ -309,6 +338,10 @@ public class RBTree<T> extends BinarySearchTree<T>{
         }
     }
 
+    /**
+     * Deletes a node with val = `value` from RBTree
+     * @param value @NotNull
+     */
     @Override
     public void delete(T value) throws TreeEmptyException,ValueNotFoundException {
         if (this.root.getRight() == null) throw new TreeEmptyException();
@@ -345,16 +378,16 @@ public class RBTree<T> extends BinarySearchTree<T>{
         }
     }
 
-
-    public static <E> void testColor(@NotNull RBTree<E> tree) {
-        testColor(tree.root.getRight());
-    }
-    private static <E> void testColor(@NotNull BinaryTreeNode<E> node) {
-        if (node.getLeft()!=null) testColor(node.getLeft());
-        System.out.print(node.isBlack() ? "black " : "red ");
-        if (node.getRight()!=null) testColor(node.getRight());
-
-    }
+    // testing purpose - prints color of each node in an inorder traversal on the console
+//    public static <E> void testColor(RBTree<E> tree) {
+//        testColor(tree.root.getRight());
+//    }
+//    private static <E> void testColor(BinaryTreeNode<E> node) {
+//        if (node.getLeft()!=null) testColor(node.getLeft());
+//        System.out.print(node.isBlack() ? "black " : "red ");
+//        if (node.getRight()!=null) testColor(node.getRight());
+//
+//    }
 
 
 

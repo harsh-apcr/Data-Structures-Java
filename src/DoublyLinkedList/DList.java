@@ -1,9 +1,10 @@
 package DoublyLinkedList;
 
 import java.util.Comparator;
+import java.util.Iterator;
 
-public class DList<T> {
-    // DList is 0-based
+public class DList<T> implements Iterable<T> {
+    // DList is 0 index-based
     private final DListNode<T> header; // head sentinel
     private final DListNode<T> trailer; // tail sentinel
     private int size;
@@ -158,4 +159,11 @@ public class DList<T> {
     public boolean isDecreasing(Comparator<T> comparator) {
         return this.isIncreasing(comparator.reversed());
     }
+
+    @Override
+    public ListIterator<T> iterator() {
+        return new ListIterator<>(header, trailer);
+    }
+
 }
+

@@ -1,18 +1,22 @@
 package Tree;
 
 import DoublyLinkedList.DList;
-import com.sun.source.tree.Tree;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Comparator;
+import java.util.Iterator;
 
-public class BinarySearchTree<T> extends BinaryTree<T> {
+public class BinarySearchTree<T> extends BinaryTree<T> implements Iterable<T> {
     protected final Comparator<T> comparator;
 
     public BinarySearchTree(Comparator<T> comparator) {
         this.comparator = comparator;
     }
 
+
+    /**
+     * inserts a node with val = `value` into the BST
+     * @param value @NotNull, value to insert into BST
+     */
     public void insert(T value) {
         if(this.root.getRight() ==null) {
             this.root.setRight(new BinaryTreeNode<>(value));
@@ -43,9 +47,9 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
     }
 
     /**
-     * @param value
+     * searches for val = `value` in the BST
+     * @param value @NotNull , value to search for
      * @return the first occurrence of value (w.r.t level of tree)
-     * @throws TreeEmptyException,ValueNotFoundException
      */
     public BinaryTreeNode<T> search(T value) throws TreeEmptyException,ValueNotFoundException {
         if (this.root.getRight() == null) throw new TreeEmptyException();
@@ -64,7 +68,12 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         }
     }
 
-    private T getMax(@NotNull BinaryTreeNode<T> node) {
+    /**
+     * returns max element in subtree rooted at node
+     * @param node @NotNull BinaryTreeNode<T>
+     * @return getMax() in subtree rooted at `node`
+     */
+    private T getMax(BinaryTreeNode<T> node) {
         while(true) {
             if(node.getRight()!=null) {
                 node = node.getRight();
@@ -75,7 +84,12 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         }
     }
 
-    private T getMin(@NotNull BinaryTreeNode<T> node) {
+    /**
+     * returns min element in subtree rooted at node
+     * @param node @NotNull BinaryTreeNode<T>
+     * @return getMin() in the subtree rooted at node
+     */
+    private T getMin(BinaryTreeNode<T> node) {
         while(true) {
             if(node.getLeft()!=null) {
                 node = node.getLeft();
@@ -88,10 +102,8 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
 
 
     /**
-     * @param value
-     * @return returns the largest value in BinarySearchTree<T> this with value <= value(input)
-     * @throws TreeEmptyException
-     * @throws ValueNotFoundException
+     * @param value @NotNull
+     * @return returns the largest value in BinarySearchTree<T> this with value <= `value`(input)
      */
     public T predecessor(T value) throws TreeEmptyException,ValueNotFoundException {
         BinaryTreeNode<T> currNode = this.search(value);
@@ -111,10 +123,8 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
     }
 
     /**
-     * @param value
+     * @param value @NotNull
      * @return returns the largest value in BinarySearchTree<T> this with value > value(input)
-     * @throws TreeEmptyException
-     * @throws ValueNotFoundException
      */
     public T successor(T value) throws TreeEmptyException,ValueNotFoundException {
         BinaryTreeNode<T> currNode = this.search(value);
@@ -133,7 +143,10 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
         }
     }
 
-
+    /**
+     * deletes a value `value` from the tree
+     * @param value @NotNull
+     */
     public void delete(T value) throws TreeEmptyException , ValueNotFoundException {
         if(this.root.getRight() ==null) throw new TreeEmptyException();
         else {
@@ -212,10 +225,41 @@ public class BinarySearchTree<T> extends BinaryTree<T> {
     }
 
     // key-invariant property
-    public static <E> boolean BSTreeSanityCheck(@NotNull BinarySearchTree<E> bST) {
+    public static <E> boolean BSTreeSanityCheck(BinarySearchTree<E> bST) {
         return bST.inOrder().isIncreasing(bST.comparator);
     }
 
+
+    /**
+     * if exact == true then does exact search of value in Tree else does approximate search (finds the first
+     * element greater than or equal to value)
+     * @param value @NotNull
+     * @param exact boolean
+     * @return BinaryTreeNode<T> of the node found
+     */
+    public BinaryTreeNode<T> search(T value,boolean exact) throws TreeEmptyException, ValueNotFoundException{
+        if (exact) return this.search(value);
+        else {
+            // find any block with value >= `value` (input)
+            BinaryTreeNode<T> currNode = this.root.getRight();
+            while(currNode!=null) {
+                // a.equals(b) == (comparator.compare(a,b) == 0) must hold
+                if (currNode.getValue().equals(value)) return currNode;
+                else if (comparator.compare(value,currNode.getValue()) > 0) {
+                    currNode = currNode.getRight();
+                }
+                else {
+                    return currNode;
+                }
+            }
+            return null;
+        }
+    }
+
+    public Iterator<T> iterator() {
+        DList<T> inorder = this.inOrder();
+        return inorder.iterator();
+    }
 
 
 
