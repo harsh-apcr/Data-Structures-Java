@@ -33,7 +33,7 @@ public class BinaryTreeNode<T> {
         return right;
     }
 
-    T getValue() {
+    public T getValue() {
         return value;
     }
 
@@ -55,7 +55,7 @@ public class BinaryTreeNode<T> {
 
     /**
      * Sets color of node black if setBlack is true
-     * @param setBlack
+     * @param setBlack indicator variable for whether to set color as black or not
      */
     void setColorBlack(boolean setBlack) { this.isBlack = setBlack;}
 

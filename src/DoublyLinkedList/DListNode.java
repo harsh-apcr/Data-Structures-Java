@@ -22,6 +22,6 @@ public class DListNode<T> {
      */
     @Override
     public String toString() {
-        return "{ value : " + value + " }";
+        return "{value : " + value.toString() + "}";
     }
 }
