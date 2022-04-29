@@ -231,8 +231,7 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements Iterable<T> {
 
 
     /**
-     * if exact == true then does exact search of value in Tree else does approximate search (finds the first
-     * element greater than or equal to value)
+     * if exact == true then does exact search of value in Tree else does a Best-Fit Search
      * @param value @NotNull
      * @param exact boolean
      * @return BinaryTreeNode<T> of the node found
@@ -240,16 +239,24 @@ public class BinarySearchTree<T> extends BinaryTree<T> implements Iterable<T> {
     public BinaryTreeNode<T> search(T value,boolean exact) throws TreeEmptyException, ValueNotFoundException{
         if (exact) return this.search(value);
         else {
-            // find any block with value >= `value` (input)
+            // find a block with the smallest value such that value >= `value` (input)
+            // implements best-fit search
             BinaryTreeNode<T> currNode = this.root.getRight();
             while(currNode!=null) {
                 // a.equals(b) == (comparator.compare(a,b) == 0) must hold
-                if (currNode.getValue().equals(value)) return currNode;
-                else if (comparator.compare(value,currNode.getValue()) > 0) {
+                if (comparator.compare(value,currNode.getValue()) > 0) {
                     currNode = currNode.getRight();
                 }
-                else {
+                else if (comparator.compare(value, currNode.getValue()) == 0) {
                     return currNode;
+                }
+                else {
+                    if (currNode.getLeft() != null && comparator.compare(currNode.getLeft().getValue(), value) > 0) {
+                        currNode = currNode.getLeft();
+                    } else {
+                        // currNode.getLeft() == null || currNode.getLeft().getValue() < value
+                        return currNode;
+                    }
                 }
             }
             return null;

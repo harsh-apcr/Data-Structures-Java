@@ -42,7 +42,7 @@ public class BinaryTree<T> {
     public DList<T> inOrder() { return inOrderTraversal(this.root.getRight(),new DList<>()); }
 
     private DList<T> inOrderTraversal(BinaryTreeNode<T> root,DList<T> nodes) {
-        if (root == null) return null;
+        if (root == null) return nodes;
         else {
             inOrderTraversal(root.getLeft(),nodes);
             nodes.insertAtLast(root.getValue());
